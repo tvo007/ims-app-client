@@ -1,34 +1,9 @@
-import {Button, Snackbar, Typography} from '@mui/material';
-import React, {useEffect, useState} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
-import {actions} from './alertSlice';
-import {resetAddProductStatus} from '../product/productSlice';
+import {Snackbar} from '@mui/material';
+
+import {useAlert} from '../../utils/useAlert';
 
 const Alert = () => {
-  const dispatch = useDispatch ();
-  const {alert} = useSelector (state => state.alert);
-  const [message, setMessage] = useState ({type: '', message: ''});
-  const [show, setShow] = useState (false);
-
-  useEffect (
-    () => {
-      if (alert) {
-        setMessage (message);
-        setShow (true);
-        setTimeout (() => {
-          setShow (false);
-          dispatch (resetAddProductStatus ());
-          //incorporate a passable function to reset form status
-        }, 3000);
-      }
-    },
-    [alert, message]
-  );
-
-  const onClose = () => {
-    setShow (false);
-  };
-
+  const {alert, show, onClose} = useAlert ();
   return show
     ? <Snackbar
         open={show}
