@@ -54,7 +54,7 @@ export const addProduct = createAsyncThunk (
 
 const initialState = {
   loading: false,
-  addProduct: false,
+  addProduct: null,
   products: [], //parallel to loading
   product: {},
   error: null,
@@ -64,8 +64,8 @@ const productSlice = createSlice ({
   name: 'product',
   initialState,
   reducers: {
-    resetAddProductStatus: (state) => {
-      state.addProduct = false;
+    resetAddProductStatus: state => {
+      state.addProduct = null;
     },
   },
   extraReducers: {

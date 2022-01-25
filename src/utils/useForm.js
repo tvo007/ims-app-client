@@ -9,10 +9,11 @@ export const useForm  = (initialState = {}, onSubmit) => {
         setValues({...values, [e.target.name]: e.target.value})
     }
 
-    const submitHandler = (e) => {
+    const submitHandler = async (e) => {
         e.preventDefault();
         onSubmit?.(values);
         setValues(initialState)
+       
     }
 
     return {values, handleInputChange, submitHandler}

@@ -7,14 +7,11 @@ import {
   InputLabel,
   MenuItem,
   FormControl,
-  Typography,
 } from '@mui/material';
-import {makeStyles, useTheme} from '@mui/styles';
 import PageHeader from '../../components/common/PageHeader';
 import {Link} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import {actions} from '../alert/alertSlice';
-import {styled} from '@mui/system';
 import {
   StyledCard,
   StyledCardHeader,
@@ -22,9 +19,15 @@ import {
   StyledFormFieldsContainer,
 } from '../../components/styled/AddProducts.styled';
 import {Select} from '@mui/material';
-import {addProduct, selectAddProductStatus} from './productSlice';
+import {
+  addProduct,
+  resetAddProductStatus,
+  selectAddProductStatus,
+} from './productSlice';
 import {useForm} from '../../utils/useForm';
 import {ADD_PRODUCT} from '../../app/constants';
+import {productSchema, validateSchema} from '../../schema/ProductSchema';
+import * as yup from 'yup';
 
 const initialValues = {
   name: '',
@@ -34,13 +37,12 @@ const initialValues = {
   size: '',
   sku: '',
 };
-
 //inquiry: how to create a robust formValidation hook that takes in an object of initial values
 //and an object for validation rules?
 //ref: https://dev.to/zachsnoek/creating-custom-react-hooks-useform-1gon
-
 export default function ProductForm({references}) {
   const dispatch = useDispatch ();
+  const [sku, setSku] = useState ('');
   const addProductStatus = useSelector (selectAddProductStatus);
   const {
     values,
@@ -59,9 +61,7 @@ export default function ProductForm({references}) {
     )
   );
 
-  const [success, setSuccess] = useState (false);
-  const [sku, setSku] = useState ('');
-
+  //refactor out of this component // customSelector???
   function getCodes (suppId, catId, sizeId) {
     let supplier = references.suppliers.find (x => x.id === suppId) || {
       code: '',
@@ -77,11 +77,8 @@ export default function ProductForm({references}) {
       catCode: category.code,
       sizeCode: size.code,
     };
-
     return `${codes.suppCode}-${codes.catCode}-${codes.sizeCode}`;
   }
-
-  // console.log (getCodes (2, 1, 1));
 
   useEffect (
     () => {
@@ -100,11 +97,13 @@ export default function ProductForm({references}) {
             type: 'success',
           })
         );
+        dispatch (resetAddProductStatus ());
+        // alertHandler ();
       }
     },
     [addProductStatus, dispatch]
   );
-  
+
   return (
     <Box sx={{ml: '1rem'}}>
       <Grid container direction="column" spacing={2} justifyContent="center">
@@ -124,7 +123,6 @@ export default function ProductForm({references}) {
                   id="name"
                   onChange={handleInputChange}
                   value={values.name}
-                  required
                   InputLabelProps={{required: false}}
                   inputProps={{
                     sx: {
