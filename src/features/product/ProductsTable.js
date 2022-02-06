@@ -8,10 +8,18 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
-import {Button, Container, Grid, IconButton, Typography} from '@mui/material';
+import {
+  Button,
+  Container,
+  Grid,
+  IconButton,
+  Stack,
+  Typography,
+} from '@mui/material';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import PageHeader from '../../components/common/PageHeader';
 import {Link} from 'react-router-dom';
+import {SPACES_URL} from '../../utils/api';
 
 const StyledTableCell = styled (TableCell) (({theme}) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -41,9 +49,25 @@ const TableItemText = ({children}) => {
   );
 };
 
+const TableItemImage = ({imageUrl}) => {
+  return (
+    <Box
+      sx={{
+        borderRadius: '10px',
+        width: '150px',
+        height: '100px',
+        background: `url(${imageUrl})`,
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'center',
+      }}
+    />
+  );
+};
+
 const columnNames = [
-  'SKU',
   'Product Name',
+  'SKU',
   'Category',
   'Supplier',
   'Size',
@@ -75,8 +99,19 @@ export default function ProductsTable({products}) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {products.map ((product) => (
+            {products.map (product => (
               <StyledTableRow key={product.sku}>
+                <StyledTableCell align="left">
+                  <Stack spacing={1}>
+                    <TableItemText>
+                      {product.name}
+                    </TableItemText>
+                    <TableItemImage
+                      imageUrl={`${SPACES_URL}/${product.image.imageId}`}
+                    />
+
+                  </Stack>
+                </StyledTableCell>
                 <StyledTableCell component="th" scope="row">
                   <TableItemText>
                     {product.sku}
@@ -84,13 +119,7 @@ export default function ProductsTable({products}) {
                 </StyledTableCell>
                 <StyledTableCell align="left">
                   <TableItemText>
-                    {product.name}
-                  </TableItemText>
-                </StyledTableCell>
-                <StyledTableCell align="left">
-                  <TableItemText>
                     {product.category.name}
-
                   </TableItemText>
                 </StyledTableCell>
                 <StyledTableCell align="left">

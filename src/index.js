@@ -10,6 +10,10 @@ import {ThemeProvider, createTheme} from '@mui/material/styles';
 
 const theme = createTheme ();
 
+if (module.hot) {
+  module.hot.accept ();
+}
+
 ReactDOM.render (
   <React.StrictMode>
     <ThemeProvider theme={theme}>
