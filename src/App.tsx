@@ -1,8 +1,6 @@
-import React from "react";
-import Navbar from "./components/common/Navbar";
-import { Routes, Route, Outlet, Link } from "react-router-dom";
-import { Container, ThemeProvider } from "@mui/material";
-import { Login, Dash, SKU, Products, AddProducts } from "./pages";
+import { Routes, Route } from "react-router-dom";
+import { ThemeProvider } from "@mui/material";
+import { Login, Dash, Products, AddProducts } from "./pages";
 import Layout from "./components/common/Layout";
 import Alert from "./features/alert/Alert";
 import theme from "./theme.js";

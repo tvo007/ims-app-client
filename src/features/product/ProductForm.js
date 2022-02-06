@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {
   Grid,
   Button,
@@ -7,6 +7,9 @@ import {
   InputLabel,
   MenuItem,
   FormControl,
+  Typography,
+  IconButton,
+  Input,
 } from '@mui/material';
 import PageHeader from '../../components/common/PageHeader';
 import {Link} from 'react-router-dom';
@@ -26,8 +29,12 @@ import {
 } from './productSlice';
 import {useForm} from '../../utils/useForm';
 import {ADD_PRODUCT} from '../../app/constants';
-import {productSchema, validateSchema} from '../../schema/ProductSchema';
-import * as yup from 'yup';
+import {postUploadImage} from '../../utils/api';
+import {useImageUpload} from '../../utils/useImageUpload';
+import ImageUpload from './ImageUpload';
+// import {productSchema, validateSchema} from '../../schema/ProductSchema';
+// import * as yup from 'yup';
+// import {PhotoCamera} from '@mui/icons-material';
 
 const initialValues = {
   name: '',
@@ -35,6 +42,7 @@ const initialValues = {
   supplier: '',
   category: '',
   size: '',
+  image: '',
   sku: '',
 };
 //inquiry: how to create a robust formValidation hook that takes in an object of initial values
@@ -56,6 +64,7 @@ export default function ProductForm({references}) {
         supplierId: values.supplier,
         categoryId: values.category,
         sizeId: values.size,
+        imageId: imgData.id || '',
         sku,
       })
     )
@@ -104,8 +113,19 @@ export default function ProductForm({references}) {
     [addProductStatus, dispatch]
   );
 
+  //checklist for setting up image uploader:
+  //FileInput -- button to prompt file upload/drag drop
+  //ImagePreview
+  //clear reset image
+  //-wire up with useUploadImage
+  //button to confirm upload
+  //**switch over to backend work on image and storage services*/
+  //loader for uploading when button clicked
+  const [imgData, setImgData] = useState ('');
+
   return (
     <Box sx={{ml: '1rem'}}>
+      {/**VV temp div to test out file upload form seperate from ProductForm */}
       <Grid container direction="column" spacing={2} justifyContent="center">
         <PageHeader title="Create a new product" />
         <form onSubmit={submitHandler}>
@@ -155,6 +175,16 @@ export default function ProductForm({references}) {
           </StyledCard>
           <StyledCard>
             <StyledCardHeader component={Box} variant="h5" fontWeight={600}>
+              Upload Image
+            </StyledCardHeader>
+            <StyledFormFieldsContainer>
+              <StyledFormFieldContainer>
+                <ImageUpload imgData={imgData} setImgData={setImgData} />
+              </StyledFormFieldContainer>
+            </StyledFormFieldsContainer>
+          </StyledCard>
+          <StyledCard>
+            <StyledCardHeader component={Box} variant="h5" fontWeight={600}>
               Supplier
             </StyledCardHeader>
             <StyledFormFieldsContainer>
@@ -186,6 +216,7 @@ export default function ProductForm({references}) {
               </StyledFormFieldContainer>
             </StyledFormFieldsContainer>
           </StyledCard>
+
           <StyledCard>
             <StyledCardHeader component={Box} variant="h5" fontWeight={600}>
               Category
