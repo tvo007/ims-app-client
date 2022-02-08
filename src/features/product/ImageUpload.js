@@ -1,9 +1,10 @@
-import {Button, IconButton, Input} from '@mui/material';
-import {Box} from '@mui/system';
+import {Button, IconButton, Input, Stack, Typography} from '@mui/material';
+import {borderRadius, Box} from '@mui/system';
 import React, {useRef, useState} from 'react';
 import {postUploadImage} from '../../utils/api';
 import {useImageUpload} from '../../utils/useImageUpload';
 import upload from '../../images/undraw_handcrafts_add_files.svg';
+import {IoCloseCircleSharp} from 'react-icons/io5';
 
 function ImageUpload({imgData, setImgData}) {
   const fileInputRef = useRef (null);
@@ -54,28 +55,53 @@ function ImageUpload({imgData, setImgData}) {
       {source &&
         <div>
           {/**uploading preview box */}
-          <Box
-            sx={{
-              borderRadius: '10px',
-              width: '175px',
-              height: '125px',
-              background: `url(${source})`,
-              backgroundSize: 'cover',
-              backgroundRepeat: 'no-repeat',
-              backgroundPosition: 'center',
-            }}
-          />
-          <Button variant="contained" onClick={reset} sx={{width: '10rem'}}>
-            Reset Picture
-          </Button>
-          {/* <img src={source} alt={'img_preview'} width={1000} /> */}
-          <Button
-            variant="contained"
-            onClick={uploadImage}
-            sx={{width: '10rem'}}
-          >
-            Upload file
-          </Button>
+          <Stack direction={'row'} justifyContent="space-between">
+            <Box sx={{position: 'relative'}}>
+              <IoCloseCircleSharp
+                size={30}
+                style={{
+                  position: 'absolute',
+                  top: -10,
+                  right: -10,
+                  cursor: 'pointer',
+                  color: 'red',
+                }}
+                onClick={e => reset ()}
+              />
+              <Box
+                sx={{
+                  borderRadius: '10px',
+                  width: '175px',
+                  height: '125px',
+                  background: `url(${source})`,
+                  backgroundSize: 'cover',
+                  backgroundRepeat: 'no-repeat',
+                  backgroundPosition: 'center',
+                }}
+              />
+            </Box>
+
+          </Stack>
+          <Stack direction={'row'}>
+            <Button
+              variant="text"
+              size="small"
+              onClick={reset}
+              sx={{width: '6rem'}}
+            >
+              Clear Image
+            </Button>
+            {/* <img src={source} alt={'img_preview'} width={1000} /> */}
+            <Button
+              variant="contained"
+              size="small"
+              onClick={uploadImage}
+              sx={{width: '6rem'}}
+            >
+              Use Image
+            </Button>
+          </Stack>
+
         </div>}
       {!file &&
         <Box>
@@ -99,7 +125,7 @@ function ImageUpload({imgData, setImgData}) {
                 backgroundSize: '40%',
                 backgroundRepeat: 'no-repeat',
                 backgroundPosition: 'center',
-                pt: '25rem',
+                pt: '20rem',
               }}
             >
               Select Image
