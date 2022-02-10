@@ -44,6 +44,9 @@ const initialValues = {
   size: '',
   image: '',
   sku: '',
+  price: '',
+  qty: '',
+  upb: '',
 };
 //inquiry: how to create a robust formValidation hook that takes in an object of initial values
 //and an object for validation rules?
@@ -52,22 +55,35 @@ export default function ProductForm({references}) {
   const dispatch = useDispatch ();
   const [sku, setSku] = useState ('');
   const addProductStatus = useSelector (selectAddProductStatus);
-  const {
-    values,
-    handleInputChange,
-    submitHandler,
-  } = useForm (initialValues, values =>
-    dispatch (
-      addProduct ({
-        name: values.name,
-        desc: values.desc,
-        supplierId: values.supplier,
-        categoryId: values.category,
-        sizeId: values.size,
-        imageId: imgData.id || '',
-        sku,
-      })
-    )
+  const {values, handleInputChange, submitHandler} = useForm (
+    initialValues,
+    values =>
+      dispatch (
+        addProduct ({
+          name: values.name,
+          desc: values.desc,
+          supplierId: values.supplier,
+          categoryId: values.category,
+          sizeId: values.size,
+          imageId: imgData.id || '',
+          qty: values.qty,
+          price: values.price,
+          upb: values.upb,
+          sku,
+        })
+      )
+    // console.log ({
+    //   name: values.name,
+    //   desc: values.desc,
+    //   supplierId: values.supplier,
+    //   categoryId: values.category,
+    //   sizeId: values.size,
+    //   imageId: imgData.id || '',
+    //   qty: values.qty,
+    //   price: values.price,
+    //   upb: values.upb,
+    //   sku,
+    // })
   );
 
   //refactor out of this component // customSelector???
@@ -285,15 +301,84 @@ export default function ProductForm({references}) {
           </StyledCard>
           <StyledCard>
             <StyledCardHeader component={Box} variant="h5" fontWeight={600}>
-              SKU/Product Details
+              Product Details
             </StyledCardHeader>
             <StyledFormFieldsContainer>
+              <StyledFormFieldContainer>
+                <TextField
+                  label="Price (per bundle)"
+                  variant="outlined"
+                  fullWidth
+                  name="price"
+                  id="price"
+                  onChange={handleInputChange}
+                  value={values.price}
+                  InputLabelProps={{required: false}}
+                  inputProps={{
+                    sx: {
+                      width: {
+                        xs: '93%',
+                        sm: '95%',
+                        md: '95%',
+                        lg: '96%',
+                        xl: '96%',
+                      },
+                    },
+                  }}
+                />
+              </StyledFormFieldContainer>
+              <StyledFormFieldContainer>
+                <TextField
+                  label="Quantity In Stock"
+                  variant="outlined"
+                  fullWidth
+                  name="qty"
+                  id="qty"
+                  onChange={handleInputChange}
+                  value={values.qty}
+                  InputLabelProps={{required: false}}
+                  inputProps={{
+                    sx: {
+                      width: {
+                        xs: '93%',
+                        sm: '95%',
+                        md: '95%',
+                        lg: '96%',
+                        xl: '96%',
+                      },
+                    },
+                  }}
+                />
+              </StyledFormFieldContainer>
+              <StyledFormFieldContainer>
+                <TextField
+                  label="Units Per Bundle"
+                  variant="outlined"
+                  fullWidth
+                  name="upb"
+                  id="upb"
+                  onChange={handleInputChange}
+                  value={values.upb}
+                  InputLabelProps={{required: false}}
+                  inputProps={{
+                    sx: {
+                      width: {
+                        xs: '93%',
+                        sm: '95%',
+                        md: '95%',
+                        lg: '96%',
+                        xl: '96%',
+                      },
+                    },
+                  }}
+                />
+              </StyledFormFieldContainer>
               <StyledFormFieldContainer>
                 <TextField
                   id="sku"
                   onChange={handleInputChange}
                   value={sku}
-                  label="Sku"
+                  label="sku"
                   disabled
                   required
                   inputProps={{
