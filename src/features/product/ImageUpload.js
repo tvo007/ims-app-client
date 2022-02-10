@@ -81,6 +81,10 @@ function ImageUpload({imgData, setImgData}) {
               />
             </Box>
 
+            {imgData && <Box>
+                <Typography>Picture uploaded. Id is {imgData.id}</Typography>
+              </Box>}
+
           </Stack>
           <Stack direction={'row'}>
             <Button
