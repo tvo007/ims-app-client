@@ -414,7 +414,12 @@ export default function ProductForm({references}) {
             >
               <Box fontWeight={600}>Cancel</Box>
             </Button>
-            <Button variant="contained" sx={{width: '5rem'}} type="submit">
+            <Button
+              variant="contained"
+              sx={{width: '5rem'}}
+              type="submit"
+              disabled={!imgData ? true : false}
+            >
               <Box fontWeight={600}>Create</Box>
             </Button>
           </Grid>
