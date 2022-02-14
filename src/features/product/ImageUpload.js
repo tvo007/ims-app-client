@@ -5,6 +5,7 @@ import {postUploadImage} from '../../utils/api';
 import {useImageUpload} from '../../utils/useImageUpload';
 import upload from '../../images/undraw_handcrafts_add_files.svg';
 import {IoCloseCircleSharp} from 'react-icons/io5';
+import {BeatLoader, ScaleLoader, DotLoader} from 'react-spinners';
 
 function ImageUpload({imgData, setImgData}) {
   const fileInputRef = useRef (null);
@@ -54,7 +55,7 @@ function ImageUpload({imgData, setImgData}) {
       {/**upload image section */}
       {source &&
         <div>
-          {/**uploading preview box */}
+          {/**uploading preview box, not prepped on form */}
           <Stack direction={'row'} justifyContent="space-between">
             <Box sx={{position: 'relative'}}>
               <IoCloseCircleSharp
@@ -81,9 +82,29 @@ function ImageUpload({imgData, setImgData}) {
               />
             </Box>
 
-            {imgData && <Box>
-                <Typography>Picture uploaded. Id is {imgData.id}</Typography>
-              </Box>}
+            <Box
+              sx={{
+                width: '75%',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              {imgData &&
+                !loading &&
+                <Box>
+                  <Typography>Image uploaded.</Typography>
+                </Box>}
+
+              {!imgData &&
+                !loading &&
+                <Box>
+                  <Typography>Image not yet loaded.</Typography>
+                </Box>}
+
+              {loading && <DotLoader color={'#5048E5'} size={30} />}
+            </Box>
 
           </Stack>
           <Stack direction={'row'}>
@@ -102,11 +123,12 @@ function ImageUpload({imgData, setImgData}) {
               onClick={uploadImage}
               sx={{width: '6rem'}}
             >
-              Use Image
+              Confirm
             </Button>
           </Stack>
 
         </div>}
+
       {!file &&
         <Box>
           <label htmlFor="icon-button-file">

@@ -1,4 +1,4 @@
-import {Fragment} from 'react';
+import {Fragment, useState} from 'react';
 import {styled} from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -20,6 +20,7 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import PageHeader from '../../components/common/PageHeader';
 import {Link} from 'react-router-dom';
 import {SPACES_URL} from '../../utils/api';
+import {ChevronRight, KeyboardArrowDown} from '@mui/icons-material';
 
 const StyledTableCell = styled (TableCell) (({theme}) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -66,6 +67,7 @@ const TableItemImage = ({imageUrl}) => {
 };
 
 const columnNames = [
+  '',
   'Product Name',
   'SKU',
   'Category',
@@ -75,6 +77,12 @@ const columnNames = [
 ];
 
 export default function ProductsTable({products}) {
+  const [openProduct, setOpenProduct] = useState (null);
+
+  const handleOpenProduct = productId => {
+    setOpenProduct (prevValue => (prevValue === productId ? null : productId));
+  };
+
   return (
     <Fragment>
       <Grid container justifyContent={'space-between'}>
@@ -99,46 +107,57 @@ export default function ProductsTable({products}) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {products.map (product => (
-              <StyledTableRow key={product.sku}>
-                <StyledTableCell align="left">
-                  <Stack spacing={1}>
-                    <TableItemText>
-                      {product.name}
-                    </TableItemText>
-                    <TableItemImage
-                      imageUrl={`${SPACES_URL}/${product.image.imageId}`}
-                    />
+            {products.map (product => {
+              const open = product.id === openProduct;
+              return (
+                <StyledTableRow key={product.sku}>
+                  <StyledTableCell align="left">
+                    <IconButton onClick={() => handleOpenProduct (product.id)}>
+                      {/**in progress 2.13.22 */}
+                      {open && <KeyboardArrowDown />}
+                      {!open && <ChevronRight />}
 
-                  </Stack>
-                </StyledTableCell>
-                <StyledTableCell component="th" scope="row">
-                  <TableItemText>
-                    {product.sku}
-                  </TableItemText>
-                </StyledTableCell>
-                <StyledTableCell align="left">
-                  <TableItemText>
-                    {product.category.name}
-                  </TableItemText>
-                </StyledTableCell>
-                <StyledTableCell align="left">
-                  <TableItemText>
-                    {product.supplier.name}
-                  </TableItemText>
-                </StyledTableCell>
-                <StyledTableCell align="left">
-                  <TableItemText>
-                    {product.size.name}
-                  </TableItemText>
-                </StyledTableCell>
-                <StyledTableCell align="center">
-                  <IconButton>
-                    <MoreHorizIcon />
-                  </IconButton>
-                </StyledTableCell>
-              </StyledTableRow>
-            ))}
+                    </IconButton>
+                  </StyledTableCell>
+                  <StyledTableCell align="left">
+                    <Stack spacing={1}>
+                      <TableItemText>
+                        {product.name}
+                      </TableItemText>
+                      <TableItemImage
+                        imageUrl={`${SPACES_URL}/${product.image.imageId}`}
+                      />
+
+                    </Stack>
+                  </StyledTableCell>
+                  <StyledTableCell component="th" scope="row">
+                    <TableItemText>
+                      {product.sku}
+                    </TableItemText>
+                  </StyledTableCell>
+                  <StyledTableCell align="left">
+                    <TableItemText>
+                      {product.category.name}
+                    </TableItemText>
+                  </StyledTableCell>
+                  <StyledTableCell align="left">
+                    <TableItemText>
+                      {product.supplier.name}
+                    </TableItemText>
+                  </StyledTableCell>
+                  <StyledTableCell align="left">
+                    <TableItemText>
+                      {product.size.name}
+                    </TableItemText>
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    <IconButton>
+                      <MoreHorizIcon />
+                    </IconButton>
+                  </StyledTableCell>
+                </StyledTableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </TableContainer>
