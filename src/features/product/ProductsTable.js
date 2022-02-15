@@ -10,6 +10,7 @@ import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import {
   Button,
+  CardContent,
   Container,
   Grid,
   IconButton,
@@ -67,7 +68,6 @@ const TableItemImage = ({imageUrl}) => {
 };
 
 const columnNames = [
-  '',
   'Product Name',
   'SKU',
   'Category',
@@ -97,6 +97,7 @@ export default function ProductsTable({products}) {
         <Table sx={{minWidth: 700}} aria-label="customized table">
           <TableHead>
             <TableRow>
+              <StyledTableCell sx={{maxWidth: '20%'}} />
               {columnNames.map (name => (
                 <StyledTableCell key={name}>
                   <Typography variant="button">
@@ -110,52 +111,108 @@ export default function ProductsTable({products}) {
             {products.map (product => {
               const open = product.id === openProduct;
               return (
-                <StyledTableRow key={product.sku}>
-                  <StyledTableCell align="left">
-                    <IconButton onClick={() => handleOpenProduct (product.id)}>
-                      {/**in progress 2.13.22 */}
-                      {open && <KeyboardArrowDown />}
-                      {!open && <ChevronRight />}
+                <Fragment key={product.sku}>
+                  <StyledTableRow>
+                    <StyledTableCell
+                      padding="checkbox"
+                      sx={{
+                        ...(open && {
+                          position: 'relative',
+                          '&:after': {
+                            position: 'absolute',
+                            content: '" "',
+                            top: 0,
+                            left: 0,
+                            backgroundColor: 'primary.main',
+                            width: 3,
+                            height: 'calc(100% + 1px)',
+                          },
+                        }),
+                      }}
+                      width="25%"
+                    >
+                      <IconButton
+                        onClick={() => handleOpenProduct (product.id)}
+                      >
+                        {/**in progress 2.13.22 */}
+                        {open && <KeyboardArrowDown />}
+                        {!open && <ChevronRight />}
 
-                    </IconButton>
-                  </StyledTableCell>
-                  <StyledTableCell align="left">
-                    <Stack spacing={1}>
+                      </IconButton>
+                    </StyledTableCell>
+                    <StyledTableCell align="left">
+                      <Stack spacing={1}>
+                        <TableItemText>
+                          {product.name}
+                        </TableItemText>
+                        <TableItemImage
+                          imageUrl={`${SPACES_URL}/${product.image.imageId}`}
+                        />
+                      </Stack>
+                    </StyledTableCell>
+                    <StyledTableCell component="th" scope="row">
                       <TableItemText>
-                        {product.name}
+                        {product.sku}
                       </TableItemText>
-                      <TableItemImage
-                        imageUrl={`${SPACES_URL}/${product.image.imageId}`}
-                      />
-
-                    </Stack>
-                  </StyledTableCell>
-                  <StyledTableCell component="th" scope="row">
-                    <TableItemText>
-                      {product.sku}
-                    </TableItemText>
-                  </StyledTableCell>
-                  <StyledTableCell align="left">
-                    <TableItemText>
-                      {product.category.name}
-                    </TableItemText>
-                  </StyledTableCell>
-                  <StyledTableCell align="left">
-                    <TableItemText>
-                      {product.supplier.name}
-                    </TableItemText>
-                  </StyledTableCell>
-                  <StyledTableCell align="left">
-                    <TableItemText>
-                      {product.size.name}
-                    </TableItemText>
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    <IconButton>
-                      <MoreHorizIcon />
-                    </IconButton>
-                  </StyledTableCell>
-                </StyledTableRow>
+                    </StyledTableCell>
+                    <StyledTableCell align="left">
+                      <TableItemText>
+                        {product.category.name}
+                      </TableItemText>
+                    </StyledTableCell>
+                    <StyledTableCell align="left">
+                      <TableItemText>
+                        {product.supplier.name}
+                      </TableItemText>
+                    </StyledTableCell>
+                    <StyledTableCell align="left">
+                      <TableItemText>
+                        {product.size.name}
+                      </TableItemText>
+                    </StyledTableCell>
+                    <StyledTableCell align="center">
+                      <IconButton>
+                        <MoreHorizIcon />
+                      </IconButton>
+                    </StyledTableCell>
+                  </StyledTableRow>
+                  {open &&
+                    <StyledTableRow>
+                      <StyledTableCell
+                        colSpan={7}
+                        sx={{
+                          p: 0,
+                          position: 'relative',
+                          '&:after': {
+                            position: 'absolute',
+                            content: '" "',
+                            top: 0,
+                            left: 0,
+                            backgroundColor: 'primary.main',
+                            width: 3,
+                            height: 'calc(100% + 1px)',
+                          },
+                        }}
+                      >
+                        <CardContent>
+                          <Stack direction="row" spacing={3}>
+                            <Typography>
+                              Price: {product.price}
+                            </Typography>
+                            <Typography>
+                              Units per bundle: {product.upb}
+                            </Typography>
+                            <Typography>
+                              Quantity in stock: {product.qty}
+                            </Typography>
+                            <Typography>
+                              Units per bundle: {product.upb}
+                            </Typography>
+                          </Stack>
+                        </CardContent>
+                      </StyledTableCell>
+                    </StyledTableRow>}
+                </Fragment>
               );
             })}
           </TableBody>
