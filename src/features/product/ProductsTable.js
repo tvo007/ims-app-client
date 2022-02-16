@@ -83,6 +83,10 @@ export default function ProductsTable({products}) {
     setOpenProduct (prevValue => (prevValue === productId ? null : productId));
   };
 
+  const handleCancelEdit = () => {
+    setOpenProduct (null);
+  };
+
   return (
     <Fragment>
       <Grid container justifyContent={'space-between'}>
@@ -196,19 +200,47 @@ export default function ProductsTable({products}) {
                       >
                         <CardContent>
                           <Stack direction="row" spacing={3}>
-                            <Typography>
-                              Price: {product.price}
-                            </Typography>
-                            <Typography>
-                              Units per bundle: {product.upb}
-                            </Typography>
-                            <Typography>
-                              Quantity in stock: {product.qty}
-                            </Typography>
-                            <Typography>
-                              Units per bundle: {product.upb}
-                            </Typography>
+                            <Box width="40%">
+                              <Typography variant="h5">
+                                Basic Details
+                              </Typography>
+                              <Typography>
+                                Product Name: {product.name}
+                              </Typography>
+                              <Typography>SKU: {product.sku}</Typography>
+                              <Typography>
+                                Category: {product.category.name}
+                              </Typography>
+                            </Box>
+
+                            <Box width="40%">
+                              <Typography variant="h5">
+                                Pricing and Inventory
+                              </Typography>
+                              <Typography>
+                                Price: {product.price}
+                              </Typography>
+                              <Typography>
+                                Units per bundle: {product.upb}
+                              </Typography>
+                              <Typography>
+                                Quantity in stock: {product.qty}
+                              </Typography>
+                              <Typography>
+                                Units per bundle: {product.upb}
+                              </Typography>
+                            </Box>
                           </Stack>
+                          <Box>
+                            <Stack direction="row" width="30%" spacing={2}>
+                              <Button size="small" variant="contained">
+                                Update
+                              </Button>
+                              <Button size="small" onClick={handleCancelEdit}>
+                                Cancel
+                              </Button>
+                            </Stack>
+                          </Box>
                         </CardContent>
                       </StyledTableCell>
                     </StyledTableRow>}
