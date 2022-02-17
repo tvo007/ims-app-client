@@ -15,6 +15,7 @@ import {
   Grid,
   IconButton,
   Stack,
+  TextField,
   Typography,
 } from '@mui/material';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
@@ -201,38 +202,96 @@ export default function ProductsTable({products}) {
                         <CardContent>
                           <Stack direction="row" spacing={3}>
                             <Box width="40%">
-                              <Typography variant="h5">
-                                Basic Details
-                              </Typography>
-                              <Typography>
-                                Product Name: {product.name}
-                              </Typography>
-                              <Typography>SKU: {product.sku}</Typography>
-                              <Typography>
-                                Category: {product.category.name}
-                              </Typography>
+                              <Stack direction="column" spacing={3}>
+                                <Typography variant="h6">
+                                  Basic Details
+                                </Typography>
+                                <TextField
+                                  label="Product Name"
+                                  variant="outlined"
+                                  name="Product Name"
+                                  id="productName"
+                                  value={product.name}
+                                />
+                                <TextField
+                                  label="SKU"
+                                  variant="outlined"
+                                  name="SKU"
+                                  id="sku"
+                                  value={product.sku}
+                                  disabled
+                                />
+                                {/**turn into select field form */}
+                                <TextField
+                                  label="Category"
+                                  variant="outlined"
+                                  name="category"
+                                  id="category"
+                                  value={product.category.name}
+                                />
+                              </Stack>
                             </Box>
-
                             <Box width="40%">
-                              <Typography variant="h5">
-                                Pricing and Inventory
-                              </Typography>
-                              <Typography>
-                                Price: {product.price}
-                              </Typography>
-                              <Typography>
-                                Units per bundle: {product.upb}
-                              </Typography>
-                              <Typography>
-                                Quantity in stock: {product.qty}
-                              </Typography>
-                              <Typography>
-                                Units per bundle: {product.upb}
-                              </Typography>
+                              <Stack direction="column" spacing={3}>
+                                <Typography variant="h6">
+                                  Pricing and Inventory
+                                </Typography>
+                                <TextField
+                                  label="Old Price"
+                                  variant="outlined"
+                                  name="price"
+                                  id="productOldPrice"
+                                  value={product.price}
+                                />
+                                <TextField
+                                  label="New Price"
+                                  variant="outlined"
+                                  name="newPrice"
+                                  id="productNewPrice"
+                                  value={''}
+                                />
+                                <TextField
+                                  label="Units Per Bundle"
+                                  variant="outlined"
+                                  name="upb"
+                                  id="upb"
+                                  value={product.upb}
+                                />
+                                <TextField
+                                  label="Quantity in Stock"
+                                  variant="outlined"
+                                  name="qty"
+                                  id="qty"
+                                  value={product.qty}
+                                />
+                              </Stack>
                             </Box>
                           </Stack>
+                          {/**edit desc div */}
                           <Box>
-                            <Stack direction="row" width="30%" spacing={2}>
+                            <Stack direction={'column'} spacing={3}>
+                              <Typography variant="h6">
+                                Description
+                              </Typography>
+                              <TextField
+                                label="Product Description"
+                                variant="outlined"
+                                name="desc"
+                                id="desc"
+                                fullWidth
+                                value={product.desc}
+                                multiline
+                                minRows={2}
+                              />
+                            </Stack>
+                          </Box>
+                          <Box>
+                            <Stack
+                              direction="row"
+                              width="30%"
+                              spacing={2}
+                              sx={{mt: '2rem'}}
+                            >
                               <Button size="small" variant="contained">
                                 Update
                               </Button>
