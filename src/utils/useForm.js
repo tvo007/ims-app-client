@@ -13,10 +13,9 @@ export const useForm  = (initialState = {}, onSubmit) => {
         e.preventDefault();
         onSubmit?.(values);
         setValues(initialState)
-       
     }
 
-    return {values, handleInputChange, submitHandler}
+    return {values, handleInputChange, submitHandler, setValues}
 
 }
 
