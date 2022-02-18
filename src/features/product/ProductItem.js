@@ -8,7 +8,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import React, {Fragment, useEffect} from 'react';
+import {Fragment} from 'react';
 import {StyledTableCell, StyledTableRow} from './Products.styled';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import {SPACES_URL} from '../../utils/api';
@@ -57,10 +57,6 @@ const ProductItem = ({
   //sooo on button click we are not correctly updating values
   //note: openProduct works but values does not
   //soln1? : instantiate useForm hook inside mapped item component
-
-  //   useEffect(() => {
-  //     setValues(product)
-  //   }, [values])
 
   return (
     <Fragment key={product.sku}>
@@ -169,7 +165,7 @@ const ProductItem = ({
                       variant="outlined"
                       name="SKU"
                       id="sku"
-                      value={product.sku}
+                      value={values.sku}
                       disabled
                     />
                     {/**turn into select field form */}
@@ -178,7 +174,7 @@ const ProductItem = ({
                       variant="outlined"
                       name="category"
                       id="category"
-                      value={product.category.name}
+                      value={values.category.name}
                     />
                   </Stack>
                 </Box>
@@ -192,7 +188,7 @@ const ProductItem = ({
                       variant="outlined"
                       name="price"
                       id="productOldPrice"
-                      value={product.price}
+                      value={values.price}
                     />
                     <TextField
                       label="New Price"
@@ -206,14 +202,14 @@ const ProductItem = ({
                       variant="outlined"
                       name="upb"
                       id="upb"
-                      value={product.upb}
+                      value={values.upb}
                     />
                     <TextField
                       label="Quantity in Stock"
                       variant="outlined"
                       name="qty"
                       id="qty"
-                      value={product.qty}
+                      value={values.qty}
                     />
                   </Stack>
                 </Box>
@@ -230,7 +226,7 @@ const ProductItem = ({
                     name="desc"
                     id="desc"
                     fullWidth
-                    value={product.desc}
+                    value={values.desc}
                     multiline
                     minRows={2}
                   />
