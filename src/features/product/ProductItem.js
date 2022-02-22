@@ -3,7 +3,12 @@ import {
   Box,
   Button,
   CardContent,
+  FormControl,
   IconButton,
+  InputAdornment,
+  InputLabel,
+  MenuItem,
+  Select,
   Stack,
   TextField,
   Typography,
@@ -13,6 +18,8 @@ import {StyledTableCell, StyledTableRow} from './Products.styled';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import {SPACES_URL} from '../../utils/api';
 import {useForm} from '../../utils/useForm';
+import {useSelector} from 'react-redux';
+import numeral from 'numeral';
 
 const TableItemImage = ({imageUrl}) => {
   return (
@@ -46,11 +53,15 @@ const ProductItem = ({
 }) => {
   const open = product.id === openProduct;
 
+  const initialProduct = {...product, newPrice: ''};
+
   const {
     values,
     handleInputChange,
     submitHandler,
-  } = useForm (product, values => console.log (values));
+  } = useForm (initialProduct, values =>
+    console.log ({...values, price: 'bruh'})
+  );
   //in progress: how to set form data depending on data from open form??
   //how to successfully print out values on button click, right now it prints null
   //first click is null, second click successfully prints values
@@ -146,111 +157,150 @@ const ProductItem = ({
             }}
           >
             <CardContent>
-              <Stack direction="row" spacing={3}>
-                <Box width="40%">
-                  <Stack direction="column" spacing={3}>
+              <form onSubmit={submitHandler}>
+                <Stack direction="row" spacing={3} sx={{pb: '1rem'}}>
+                  <Box width="40%">
+                    <Stack direction="column" spacing={3}>
+                      <Typography variant="h6">
+                        Basic Details
+                      </Typography>
+                      <TextField
+                        label="Product Name"
+                        variant="outlined"
+                        name="name"
+                        id="name"
+                        value={values.name}
+                        onChange={handleInputChange}
+                      />
+                      <TextField
+                        label="SKU"
+                        variant="outlined"
+                        name="SKU"
+                        id="sku"
+                        value={values.sku}
+                        disabled
+                      />
+                      {/**turn into select field form */}
+
+                      <TextField
+                        label="Category"
+                        name="category"
+                        id="category"
+                        value={values.category.name} //why does this work?
+                        disabled
+                      />
+                      <TextField
+                        label="Supplier"
+                        name="supplier"
+                        id="supplier"
+                        value={values.supplier.name} //why does this work?
+                        disabled
+                      />
+                      <TextField
+                        label="Size"
+                        name="size"
+                        id="size"
+                        value={values.size.name} //why does this work?
+                        disabled
+                      />
+                    </Stack>
+                  </Box>
+                  <Box width="40%">
+                    <Stack direction="column" spacing={3}>
+                      <Typography variant="h6">
+                        Pricing and Inventory
+                      </Typography>
+                      <TextField
+                        label="Old Price"
+                        variant="outlined"
+                        name="oldPrice"
+                        id="productOldPrice"
+                        value={numeral (product.price / 100).format ('$0,0.00')}
+                        disabled
+                      />
+                      <TextField
+                        label="New Price"
+                        variant="outlined"
+                        name="newPrice"
+                        id="productNewPrice"
+                        value={values.newPrice}
+                        onChange={handleInputChange}
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              $
+                            </InputAdornment>
+                          ),
+                        }}
+                        type="number"
+                      />
+                      <TextField
+                        label="Units Per Bundle"
+                        variant="outlined"
+                        name="upb"
+                        id="upb"
+                        value={values.upb}
+                        onChange={handleInputChange}
+                        type="number"
+                      />
+                      <TextField
+                        label="Quantity in Stock"
+                        variant="outlined"
+                        name="qty"
+                        id="qty"
+                        value={values.qty}
+                        onChange={handleInputChange}
+                        type="number"
+                      />
+                    </Stack>
+                  </Box>
+                </Stack>
+                {/**edit desc div */}
+                <Box sx={{pb: '1rem'}}>
+                  <Stack direction={'column'} spacing={3}>
                     <Typography variant="h6">
-                      Basic Details
+                      Description
                     </Typography>
                     <TextField
-                      label="Product Name"
+                      label="Product Description"
                       variant="outlined"
-                      name="name"
-                      id="name"
-                      value={values.name}
+                      name="desc"
+                      id="desc"
+                      fullWidth
+                      value={values.desc}
+                      multiline
+                      minRows={2}
                       onChange={handleInputChange}
                     />
-                    <TextField
-                      label="SKU"
-                      variant="outlined"
-                      name="SKU"
-                      id="sku"
-                      value={values.sku}
-                      disabled
-                    />
-                    {/**turn into select field form */}
-                    <TextField
-                      label="Category"
-                      variant="outlined"
-                      name="category"
-                      id="category"
-                      value={values.category.name}
-                    />
                   </Stack>
                 </Box>
-                <Box width="40%">
-                  <Stack direction="column" spacing={3}>
+
+                {/* <Box sx={{height: '30vh'}}>
+                  <Stack direction={'column'} spacing={3}>
                     <Typography variant="h6">
-                      Pricing and Inventory
+                      Image Settings
                     </Typography>
-                    <TextField
-                      label="Old Price"
-                      variant="outlined"
-                      name="price"
-                      id="productOldPrice"
-                      value={values.price}
-                    />
-                    <TextField
-                      label="New Price"
-                      variant="outlined"
-                      name="newPrice"
-                      id="productNewPrice"
-                      value={''}
-                    />
-                    <TextField
-                      label="Units Per Bundle"
-                      variant="outlined"
-                      name="upb"
-                      id="upb"
-                      value={values.upb}
-                    />
-                    <TextField
-                      label="Quantity in Stock"
-                      variant="outlined"
-                      name="qty"
-                      id="qty"
-                      value={values.qty}
-                    />
+                    <Typography variant="h6">
+                      Image Settings go here
+                    </Typography>
+                  </Stack>
+                </Box> */}
+                <Box>
+                  <Stack
+                    direction="row"
+                    width="30%"
+                    spacing={2}
+                    sx={{mt: '2rem'}}
+                  >
+                    <Button size="small" variant="contained" type="submit">
+                      Update
+                    </Button>
+                    <Button size="small" onClick={handleCancelEdit}>
+                      Cancel
+                    </Button>
                   </Stack>
                 </Box>
-              </Stack>
-              {/**edit desc div */}
-              <Box>
-                <Stack direction={'column'} spacing={3}>
-                  <Typography variant="h6">
-                    Description
-                  </Typography>
-                  <TextField
-                    label="Product Description"
-                    variant="outlined"
-                    name="desc"
-                    id="desc"
-                    fullWidth
-                    value={values.desc}
-                    multiline
-                    minRows={2}
-                  />
-                </Stack>
-              </Box>
-              <Box>
-                <Stack
-                  direction="row"
-                  width="30%"
-                  spacing={2}
-                  sx={{mt: '2rem'}}
-                >
-                  <Button
-                    size="small"
-                    variant="contained"
-                    onClick={submitHandler}
-                  >
-                    Update
-                  </Button>
-                  <Button size="small" onClick={handleCancelEdit}>
-                    Cancel
-                  </Button>
-                </Stack>
-              </Box>
+              </form>
             </CardContent>
           </StyledTableCell>
         </StyledTableRow>}
