@@ -3,7 +3,10 @@ import {makeStyles, useTheme} from '@mui/styles';
 import {Grid, Typography} from '@mui/material';
 import {useDispatch, useSelector} from 'react-redux';
 import {HTTP_STATUS} from '../../app/constants';
-import {fetchProducts, selectLoadingStatus} from './productSlice';
+import {
+  fetchProducts,
+  selectLoadingStatus as selectProductStatus,
+} from './productSlice';
 import ProductsTable from './ProductsTable';
 import BeatLoader from 'react-spinners/BeatLoader';
 
@@ -16,12 +19,14 @@ const useStyles = makeStyles (theme => ({
 export default function ProductContainer () {
   const dispatch = useDispatch ();
 
-  const isLoaded = useSelector (selectLoadingStatus);
+  const productLoaded = useSelector (selectProductStatus);
+
   const products = useSelector (state => state.product.products);
   const loadingError = useSelector (state => state.product.error);
 
   useEffect (() => {
     dispatch (fetchProducts ());
+    
   }, []);
 
   const color = '#5048E5';
@@ -32,10 +37,12 @@ export default function ProductContainer () {
   return (
     <Grid className={classes.root}>
 
-      {isLoaded === HTTP_STATUS.PENDING &&
+      {productLoaded === HTTP_STATUS.PENDING &&
+        
         <BeatLoader color={color} size={15} />}
 
-      {isLoaded === HTTP_STATUS.FULFILLED &&
+      {productLoaded === HTTP_STATUS.FULFILLED &&
+       
         <ProductsTable products={products} />}
 
       {loadingError &&
