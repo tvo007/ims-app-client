@@ -54,13 +54,17 @@ const ProductItem = ({
   const open = product.id === openProduct;
 
   const initialProduct = {...product, newPrice: ''};
+  //newValues is used to hold and then format raw input when submitting form
 
   const {
     values,
     handleInputChange,
     submitHandler,
   } = useForm (initialProduct, values =>
-    console.log ({...values, price: 'bruh'})
+    console.log ({
+      ...values,
+      price: values.newPrice === '' ? values.price : values.newPrice * 100, //converts price back to non decimals
+    })
   );
   //in progress: how to set form data depending on data from open form??
   //how to successfully print out values on button click, right now it prints null
