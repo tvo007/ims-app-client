@@ -56,6 +56,7 @@ const ProductItem = ({
   const initialProduct = {...product, newPrice: ''};
   //newValues is used to hold and then format raw input when submitting form
 
+
   const {
     values,
     handleInputChange,
@@ -190,21 +191,21 @@ const ProductItem = ({
                         label="Category"
                         name="category"
                         id="category"
-                        value={values.category.name} //why does this work?
+                        value={values.category.name} 
                         disabled
                       />
                       <TextField
                         label="Supplier"
                         name="supplier"
                         id="supplier"
-                        value={values.supplier.name} //why does this work?
+                        value={values.supplier.name} 
                         disabled
                       />
                       <TextField
                         label="Size"
                         name="size"
                         id="size"
-                        value={values.size.name} //why does this work?
+                        value={values.size.name} 
                         disabled
                       />
                     </Stack>
