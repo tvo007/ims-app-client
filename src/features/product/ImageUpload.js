@@ -23,6 +23,8 @@ function ImageUpload({imgData, setImgData}) {
     }
   };
 
+  //bruh
+
   const reset = () => {
     setFile (undefined);
     setSource ('');

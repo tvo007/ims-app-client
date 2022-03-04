@@ -17,10 +17,11 @@ import {Fragment} from 'react';
 import {StyledTableCell, StyledTableRow} from './Products.styled';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import {SPACES_URL} from '../../utils/api';
-import {useForm} from '../../utils/useForm';
+// import {useForm} from '../../utils/useForm';
 import {useSelector} from 'react-redux';
 import numeral from 'numeral';
-
+import {useForm, SubmitHandler, Controller} from 'react-hook-form';
+//
 const TableItemImage = ({imageUrl}) => {
   return (
     <Box
@@ -56,23 +57,39 @@ const ProductItem = ({
   const initialProduct = {...product, newPrice: ''};
   //newValues is used to hold and then format raw input when submitting form
 
+  const {handleSubmit, control, watch, formState: {errors}} = useForm ();
 
-  const {
-    values,
-    handleInputChange,
-    submitHandler,
-  } = useForm (initialProduct, values =>
-    console.log ({
-      ...values,
-      price: values.newPrice === '' ? values.price : values.newPrice * 100, //converts price back to non decimals
-    })
-  );
+  // const {
+  //   values,
+  //   handleInputChange,
+  //   submitHandler,
+  // } = useForm (initialProduct, values =>
+  //   console.log ({
+  //     ...values,
+  //     price: values.newPrice === '' ? values.price : values.newPrice * 100, //converts price back to non decimals
+  //   })
+  // );
   //in progress: how to set form data depending on data from open form??
   //how to successfully print out values on button click, right now it prints null
   //first click is null, second click successfully prints values
   //sooo on button click we are not correctly updating values
   //note: openProduct works but values does not
   //soln1? : instantiate useForm hook inside mapped item component
+  //3.3.22 start here
+
+  // console.log ('errors', errors);
+  // console.log ('Watch variable name', watch ('name'));
+
+  const submitHandler = data => {
+    console.log ('raw form data: ', data);
+    console.log ({
+      ...initialProduct,
+      name: data.name,
+      price: data.newPrice === '' ? product.price : Number (data.newPrice),
+      upb: data.upb,
+      qty: data.qty,
+    });
+  };
 
   return (
     <Fragment key={product.sku}>
@@ -95,7 +112,6 @@ const ProductItem = ({
           }}
           width="25%"
         >
-
           {open &&
             <IconButton onClick={handleCancelEdit}>
               <KeyboardArrowDown />
@@ -143,7 +159,6 @@ const ProductItem = ({
         </StyledTableCell>
       </StyledTableRow>
       {open &&
-        values &&
         <StyledTableRow>
           <StyledTableCell
             colSpan={7}
@@ -162,27 +177,39 @@ const ProductItem = ({
             }}
           >
             <CardContent>
-              <form onSubmit={submitHandler}>
+              <form onSubmit={handleSubmit (submitHandler)}>
                 <Stack direction="row" spacing={3} sx={{pb: '1rem'}}>
                   <Box width="40%">
                     <Stack direction="column" spacing={3}>
                       <Typography variant="h6">
                         Basic Details
                       </Typography>
-                      <TextField
-                        label="Product Name"
-                        variant="outlined"
+                      <Controller
                         name="name"
-                        id="name"
-                        value={values.name}
-                        onChange={handleInputChange}
+                        control={control}
+                        defaultValue={product.name}
+                        render={({field}) => (
+                          <TextField
+                            {...field}
+                            label="Product Name"
+                            variant="outlined"
+                            // name="name"
+                            // id="name"
+                            // // value={values.name}
+                            // // onChange={handleInputChange}
+                            // defaultValue={product.name}
+                            // {...register ('name', {required: true})}
+                            error={errors.name}
+                            helperText={errors.name ? errors.name.message : ''}
+                          />
+                        )}
                       />
                       <TextField
                         label="SKU"
                         variant="outlined"
                         name="SKU"
                         id="sku"
-                        value={values.sku}
+                        value={product.sku}
                         disabled
                       />
                       {/**turn into select field form */}
@@ -191,21 +218,21 @@ const ProductItem = ({
                         label="Category"
                         name="category"
                         id="category"
-                        value={values.category.name} 
+                        value={product.category.name}
                         disabled
                       />
                       <TextField
                         label="Supplier"
                         name="supplier"
                         id="supplier"
-                        value={values.supplier.name} 
+                        value={product.supplier.name}
                         disabled
                       />
                       <TextField
                         label="Size"
                         name="size"
                         id="size"
-                        value={values.size.name} 
+                        value={product.size.name}
                         disabled
                       />
                     </Stack>
@@ -223,39 +250,55 @@ const ProductItem = ({
                         value={numeral (product.price / 100).format ('$0,0.00')}
                         disabled
                       />
-                      <TextField
-                        label="New Price"
-                        variant="outlined"
+                      <Controller
+                        control={control}
+                        defaultValue={initialProduct.newPrice}
                         name="newPrice"
-                        id="productNewPrice"
-                        value={values.newPrice}
-                        onChange={handleInputChange}
-                        InputProps={{
-                          startAdornment: (
-                            <InputAdornment position="start">
-                              $
-                            </InputAdornment>
-                          ),
-                        }}
-                        type="number"
+                        render={({field}) => (
+                          <TextField
+                            {...field}
+                            label="New Price"
+                            variant="outlined"
+                            id="productNewPrice"
+                            InputProps={{
+                              startAdornment: (
+                                <InputAdornment position="start">
+                                  $
+                                </InputAdornment>
+                              ),
+                            }}
+                            type="number"
+                          />
+                        )}
                       />
-                      <TextField
-                        label="Units Per Bundle"
-                        variant="outlined"
+                      <Controller
                         name="upb"
-                        id="upb"
-                        value={values.upb}
-                        onChange={handleInputChange}
-                        type="number"
+                        defaultValue={product.upb}
+                        control={control}
+                        render={({field}) => (
+                          <TextField
+                            {...field}
+                            label="Units Per Bundle"
+                            variant="outlined"
+                            id="upb"
+                            type="number"
+                          />
+                        )}
                       />
-                      <TextField
-                        label="Quantity in Stock"
-                        variant="outlined"
+
+                      <Controller
                         name="qty"
-                        id="qty"
-                        value={values.qty}
-                        onChange={handleInputChange}
-                        type="number"
+                        defaultValue={product.qty}
+                        control={control}
+                        render={({field}) => (
+                          <TextField
+                            {...field}
+                            label="Quantity in Stock"
+                            variant="outlined"
+                            id="qty"
+                            type="number"
+                          />
+                        )}
                       />
                     </Stack>
                   </Box>
@@ -266,16 +309,23 @@ const ProductItem = ({
                     <Typography variant="h6">
                       Description
                     </Typography>
-                    <TextField
-                      label="Product Description"
-                      variant="outlined"
+                    <Controller
                       name="desc"
-                      id="desc"
-                      fullWidth
-                      value={values.desc}
-                      multiline
-                      minRows={2}
-                      onChange={handleInputChange}
+                      control={control}
+                      defaultValue={product.desc}
+                      render={({field}) => (
+                        <TextField
+                          {...field}
+                          label="Product Description"
+                          variant="outlined"
+                          error={errors.desc}
+                          helperText={errors.desc ? errors.desc.message : ''}
+                          multiline
+                          fullWidth
+                          id="desc"
+                          minRows={2}
+                        />
+                      )}
                     />
                   </Stack>
                 </Box>
@@ -309,7 +359,6 @@ const ProductItem = ({
             </CardContent>
           </StyledTableCell>
         </StyledTableRow>}
-      {open && !values && <div>Form is not showing when it should</div>}
     </Fragment>
   );
 };
