@@ -12,6 +12,9 @@ export const alertSlice = createSlice ({
         type: action.payload.type,
       };
     },
+    clearAlert: (state, action) => {
+      state.alert = null
+    }
   },
   extraReducers: {
     // [extraAction]: (state, action) => {

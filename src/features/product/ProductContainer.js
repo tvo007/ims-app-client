@@ -16,12 +16,13 @@ const useStyles = makeStyles (theme => ({
   },
 }));
 
+
+//responsible for products loading state
 export default function ProductContainer () {
   const dispatch = useDispatch ();
 
   const productLoaded = useSelector (selectProductStatus);
 
-  const products = useSelector (state => state.product.products);
   const loadingError = useSelector (state => state.product.error);
 
   useEffect (() => {
@@ -43,7 +44,7 @@ export default function ProductContainer () {
 
       {productLoaded === HTTP_STATUS.FULFILLED &&
        
-        <ProductsTable products={products} />}
+        <ProductsTable />}
 
       {loadingError &&
         <Typography variant="h4">{loadingError.message}</Typography>}

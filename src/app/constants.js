@@ -30,6 +30,13 @@ export const ADD_PRODUCT = Object.freeze ({
   REJECTED: 'REJECTED',
 });
 
+export const UPDATE_PRODUCT = Object.freeze ({
+  PENDING: 'PENDING',
+  FULFILLED: 'FULFILLED',
+  REJECTED: 'REJECTED',
+});
+
+
 export const DELETE_PRODUCT = Object.freeze ({
   PENDING: 'PENDING',
   FULFILLED: 'FULFILLED',

@@ -13,14 +13,22 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import {Fragment} from 'react';
+import {Fragment, useEffect} from 'react';
 import {StyledTableCell, StyledTableRow} from './Products.styled';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import {SPACES_URL} from '../../utils/api';
 // import {useForm} from '../../utils/useForm';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import numeral from 'numeral';
 import {useForm, SubmitHandler, Controller} from 'react-hook-form';
+import {
+  resetUpdateProductStatus,
+  selectUpdateProductStatus,
+  updateProduct,
+} from './productSlice';
+import {UPDATE_PRODUCT} from '../../app/constants';
+import {actions} from '../alert/alertSlice';
+import {useNavigate} from 'react-router-dom';
 //
 const TableItemImage = ({imageUrl}) => {
   return (
@@ -52,6 +60,9 @@ const ProductItem = ({
   handleOpenProduct,
   handleCancelEdit,
 }) => {
+  const navigate = useNavigate ();
+  const dispatch = useDispatch ();
+  const updateProductStatus = useSelector (selectUpdateProductStatus);
   const open = product.id === openProduct;
 
   const initialProduct = {...product, newPrice: ''};
@@ -81,15 +92,42 @@ const ProductItem = ({
   // console.log ('Watch variable name', watch ('name'));
 
   const submitHandler = data => {
-    console.log ('raw form data: ', data);
-    console.log ({
-      ...initialProduct,
+    const formData = {
       name: data.name,
-      price: data.newPrice === '' ? product.price : Number (data.newPrice),
-      upb: data.upb,
-      qty: data.qty,
-    });
+      price: data.newPrice === ''
+        ? String (product.price)
+        : String (data.newPrice),
+      upb: String (data.upb),
+      qty: String (data.qty),
+      desc: String (data.desc),
+    };
+
+    dispatch (
+      updateProduct ({
+        id: product.id,
+        formData,
+      })
+    );
+
+    navigate ('/products/');
+    console.log (formData);
   };
+
+  useEffect (
+    () => {
+      if (updateProductStatus === UPDATE_PRODUCT.FULFILLED) {
+        dispatch (
+          actions.createAlert ({
+            message: `Product updated successfully. 🤗`,
+            type: 'success',
+          })
+        );
+        dispatch (resetUpdateProductStatus ());
+        // alertHandler ();
+      }
+    },
+    [updateProductStatus, dispatch]
+  );
 
   return (
     <Fragment key={product.sku}>

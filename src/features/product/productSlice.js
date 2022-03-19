@@ -5,11 +5,15 @@ import {
   API_URL,
   HTTP_STATUS,
   DELETE_SKU,
+  UPDATE_PRODUCT,
 } from '../../app/constants';
 import axios from 'axios';
 
+export const selectProducts = ({product}) =>
+  product.products.map (item => item);
 export const selectLoadingStatus = ({product}) => product.loading;
 export const selectAddProductStatus = ({product}) => product.addProduct;
+export const selectUpdateProductStatus = ({product}) => product.updateProduct;
 
 export const fetchProducts = createAsyncThunk (
   `products/fetchProducts`,
@@ -24,6 +28,17 @@ export const addProduct = createAsyncThunk (
   async formData => {
     const {data} = await axios.post (
       `${API_URL}/api/products/create`,
+      formData
+    );
+    return data;
+  }
+);
+
+export const updateProduct = createAsyncThunk (
+  `product/updateProduct`,
+  async ({id, formData}) => {
+    const {data} = await axios.patch (
+      `${API_URL}/api/products/${id}`,
       formData
     );
     return data;
@@ -55,6 +70,7 @@ export const addProduct = createAsyncThunk (
 const initialState = {
   loading: false,
   addProduct: null,
+  editProduct: null,
   products: [], //parallel to loading
   product: {},
   error: null,
@@ -66,6 +82,9 @@ const productSlice = createSlice ({
   reducers: {
     resetAddProductStatus: state => {
       state.addProduct = null;
+    },
+    resetUpdateProductStatus: state => {
+      state.editProduct = null;
     },
   },
   extraReducers: {
@@ -102,6 +121,21 @@ const productSlice = createSlice ({
     [addProduct.rejected] (state) {
       state.addProduct = ADD_PRODUCT.REJECTED;
     },
+
+    [updateProduct.pending] (state) {
+      state.updateProduct = UPDATE_PRODUCT.PENDING;
+    },
+    [updateProduct.fulfilled] (state, {payload}) {
+      state.updateProduct = UPDATE_PRODUCT.FULFILLED;
+      state.products = state.products.map (
+        product => (payload.id !== product.id ? product : payload)
+      );
+      //map out products array and replace
+      state.product = payload;
+    },
+    [updateProduct.rejected] (state) {
+      state.updateProduct = UPDATE_PRODUCT.REJECTED;
+    },
     // [deleteProduct.pending] (state) {
     //   state.loading = DELETE_PRODUCT.PENDING;
     // },
@@ -115,5 +149,8 @@ const productSlice = createSlice ({
   },
 });
 
-export const {resetAddProductStatus} = productSlice.actions;
+export const {
+  resetAddProductStatus,
+  resetUpdateProductStatus,
+} = productSlice.actions;
 export default productSlice.reducer;
